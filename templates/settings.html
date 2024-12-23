@@ -1,0 +1,47 @@
+{% extends "base2.html" %}
+{% block content %}
+<div class="settings-wrapper">
+    <div class="left-setting-widget">
+        <a class="settings-option" href="{{ url_for('ann_list') }}">
+            <i class="fa-solid fa-window-maximize"></i>
+            <p>Your Announcements</p>
+        </a>
+        <a class="settings-option" href="{{ url_for('settings') }}">
+            <i class="fa-solid fa-user"></i>
+            <p>User Settings</p>
+        </a>
+        <a class="settings-option" href="{{ url_for('main') }}">
+            <i class="fa-solid fa-circle-xmark"></i>
+            <p>Log Out</p>
+        </a>
+    </div>
+
+    <div class="right-setting-widget"> 
+        <div class="settings-widget-slot">
+            <h2>Change password</h2>
+            <div class="input-object">
+                <p>Old Password</p>
+                <input type="password" class="textline" maxlength="35">
+            </div>
+            <div class="input-object">
+                <p>New Password</p>
+                <input type="password" class="textline" maxlength="35">
+            </div>
+            <button class="main-btn">Change Password</button>
+        </div>
+        <div class="settings-widget-slot">
+            <h2>Change Phone Number</h2>
+            <div class="input-object">
+                <p>New Number</p>
+                <input type="text" class="textline" maxlength="35">
+            </div>
+            <button class="main-btn">Change Number</button>
+        </div>
+        <div class="settings-widget-slot">
+            <h2>Delete Account</h2>
+            <button class="main-btn cancel-button">Delete Account</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+       

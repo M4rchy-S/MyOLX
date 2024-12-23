@@ -1,0 +1,64 @@
+{% extends "base2.html" %}
+
+{% block content %}
+<div class="form-create-ann">
+
+    <h1>Create Announcement</h1>
+    
+    <div class="form-content">
+        <div class="input-object">
+            <p>Title</p>
+            <input type="text" class="textline" maxlength="75">
+        </div>
+        <div class="input-object">
+            <p>Price</p>
+            <input type="number" class="textline" maxlength="15">
+        </div>
+        <div class="input-object">
+            <p>Location</p>
+            <select name="city-select" class="container-box">
+                <option value="all">All Country</option>
+                <option value="Kyiv">Kyiv</option>
+                <option value="Kharkiv">Kharkiv</option>
+                <option value="Odesa">Odesa</option>
+                <option value="Dnipro">Dnipro</option>
+                <option value="Lviv">Lviv</option>
+                <option value="Zaporizhzhia">Zaporizhzhia</option>
+                <option value="Kryvyi Rih">Kryvyi Rih</option>
+                <option value="Mykolaiv">Mykolaiv</option>
+                <option value="Mariupol">Mariupol</option>
+                <option value="Vinnytsia">Vinnytsia</option>
+                <option value="Kherson">Kherson</option>
+                <option value="Poltava">Poltava</option>
+                <option value="Chernihiv">Chernihiv</option>
+                <option value="Cherkasy">Cherkasy</option>
+                <option value="Sumy">Sumy</option>
+                <option value="Zhytomyr">Zhytomyr</option>
+                <option value="Chernivtsi">Chernivtsi</option>
+                <option value="Ivano-Frankivsk">Ivano-Frankivsk</option>
+                <option value="Ternopil">Ternopil</option>
+                <option value="Rivne">Rivne</option>
+                <option value="Lutsk">Lutsk</option>
+                <option value="Uzhhorod">Uzhhorod</option>
+                <option value="Kropyvnytskyi">Kropyvnytskyi</option>
+            </select>
+        </div>
+        <div class="input-object">
+            <p>Description</p>
+            <textarea name="description" class="textline textarea-desc"></textarea>
+        </div>
+        <div class="input-object">
+            <p>Images</p>
+            <button class="main-btn">Select Images</button>
+        </div>
+        
+    </div>
+
+    <div class="form-control-buttons">
+        <button class="main-btn cancel-button" onclick="window.location.href='{{ url_for('settings') }}'">Cancel</button>
+        <button class="main-btn" onclick="window.location.href='{{ url_for('settings') }}'">Create</button>
+    </div>
+
+</div>
+{% endblock %}
+

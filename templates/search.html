@@ -1,0 +1,143 @@
+{% extends "base1.html" %}
+{% block searchbar %}
+    <div class="search-bar-section search-bar-section-search-page">
+        <form action="{{ url_for('search') }}" class="wrapper wrapper-search-bar">
+            <div class="search-div search-bar">
+                <i class="fas fa-search icons icons-inputs"></i>
+                <input type="text" class="nav-input" maxlength="250" placeholder="What are you looking for?">
+            </div>
+            <button class="btn-search" type="submit"><i class="fas fa-search icons"></i>Search</button>
+        </form>
+    </div>
+
+    <div class="filters-container">
+        <div class="wrapper filters-div">
+            <h2>Filters</h2>
+                <div class = filter-block>
+                    <div class="filter-settings">
+                        <p>Category</p>
+                        <select name="category-select" class="container-box">
+                            <option value="none">None</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="pets">Pets</option>
+                            <option value="homefurniture">Home Furniture</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="hobbies">Hobbies</option>
+                            <option value="vehicles">Vehicles</option>
+                        </select>
+                    </div>
+                    <div class="filter-settings">
+                        <p>City</p>
+                        <select name="city-select" class="container-box">
+                            <option value="all">All Country</option>
+                            <option value="Kyiv">Kyiv</option>
+                            <option value="Kharkiv">Kharkiv</option>
+                            <option value="Odesa">Odesa</option>
+                            <option value="Dnipro">Dnipro</option>
+                            <option value="Lviv">Lviv</option>
+                            <option value="Zaporizhzhia">Zaporizhzhia</option>
+                            <option value="Kryvyi Rih">Kryvyi Rih</option>
+                            <option value="Mykolaiv">Mykolaiv</option>
+                            <option value="Mariupol">Mariupol</option>
+                            <option value="Vinnytsia">Vinnytsia</option>
+                            <option value="Kherson">Kherson</option>
+                            <option value="Poltava">Poltava</option>
+                            <option value="Chernihiv">Chernihiv</option>
+                            <option value="Cherkasy">Cherkasy</option>
+                            <option value="Sumy">Sumy</option>
+                            <option value="Zhytomyr">Zhytomyr</option>
+                            <option value="Chernivtsi">Chernivtsi</option>
+                            <option value="Ivano-Frankivsk">Ivano-Frankivsk</option>
+                            <option value="Ternopil">Ternopil</option>
+                            <option value="Rivne">Rivne</option>
+                            <option value="Lutsk">Lutsk</option>
+                            <option value="Uzhhorod">Uzhhorod</option>
+                            <option value="Kropyvnytskyi">Kropyvnytskyi</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="posts-container">
+        <div class="wrapper posts-wrapper">
+
+            <h2>Found posts</h2>
+            <!-- Posts cards -->
+            <a class="post-card" href="{{ url_for('postpage') }}">
+                <img src="{{ url_for('static', filename='/images/pic1.jpg') }}" alt="" class="image-post">
+                <div class="post-card-desc">
+                    <div class="post-card-desc-top">
+                        <p class="title-p">Typical title card text</p>
+                        <p class="price-p">31 311 UAH</p>
+                    </div>
+                    <div class="post-card-desc-bottom">
+                        <p class="locat-p">
+                            Kyiv
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <a class="post-card" href="#">
+                <img src="{{ url_for('static', filename='/images/pic2.jpg') }}" alt="" class="image-post">
+                <div class="post-card-desc">
+                    <div class="post-card-desc-top">
+                        <p class="title-p">Typical title card text</p>
+                        <p class="price-p">31 311 UAH</p>
+                    </div>
+                    <div class="post-card-desc-bottom">
+                        <p class="locat-p">
+                            Kyiv
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <a class="post-card" href="#">
+                <img src="{{ url_for('static', filename='/images/pic2.jpg') }}" alt="" class="image-post">
+                <div class="post-card-desc">
+                    <div class="post-card-desc-top">
+                        <p class="title-p">Typical title card text</p>
+                        <p class="price-p">31 311 UAH</p>
+                    </div>
+                    <div class="post-card-desc-bottom">
+                        <p class="locat-p">
+                            Kyiv
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <a class="post-card" href="#">
+                <img src="{{ url_for('static', filename='/images/pic2.jpg') }}" alt="" class="image-post">
+                <div class="post-card-desc">
+                    <div class="post-card-desc-top">
+                        <p class="title-p">Typical title card text</p>
+                        <p class="price-p">31 311 UAH</p>
+                    </div>
+                    <div class="post-card-desc-bottom">
+                        <p class="locat-p">
+                            Kyiv
+                        </p>
+                    </div>
+                </div>
+            </a>
+            
+            
+            <div class="bottom-ui">
+                <a href="#">
+                    <i class="fa-solid fa-angle-left switch-arrows"></i>
+                </a>
+                
+                <h2 class="switch-title">1 of 62</h2>
+               
+                <a href="#">
+                    <i class="fa-solid fa-angle-right switch-arrows"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

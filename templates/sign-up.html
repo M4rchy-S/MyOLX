@@ -1,0 +1,38 @@
+{% extends "base2.html" %}
+{% block content %}
+<div class="form-container">
+    <div class="switch-buttons-form">
+        <a href="{{ url_for('sign_in') }}" class="a-btn-switches ">
+            <p>Sign-in</p>
+        </a>
+        <a href="{{ url_for('sign_up') }}" class="a-btn-switches active-a">
+            <p>Sign-up</p>
+        </a>
+    </div>
+    
+    <form action="{{ url_for('create_account') }}" method="post">
+
+        <div class="form-content">
+            <div class="input-object">
+                <p>Mail</p>
+                <input type="text" class="textline" maxlength="35" name="mail">
+            </div>
+            <div class="input-object">
+                <p>Create Password</p>
+                <input type="password" class="textline" name="password">
+            </div>
+            <div class="input-object">
+                <p>Name and Surname</p>
+                <input type="text" class="textline" maxlength="35" name="user_name">
+            </div>
+            <div class="input-object">
+                <p>Phone Number</p>
+                <input type="text" class="textline" maxlength="35" name="phone">
+            </div>
+            <button class="main-btn" type="submit">Sign-up</button>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

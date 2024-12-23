@@ -1,0 +1,50 @@
+{% extends "base1.html" %}
+
+{% block searchbar %}
+    <div class="search-bar-section">
+        <form action="{{ url_for('search') }}" class="wrapper wrapper-search-bar">
+            <div class="search-div search-bar">
+                <i class="fas fa-search icons icons-inputs"></i>
+                <input type="text" class="nav-input" maxlength="250" placeholder="What are you looking for?">
+            </div>
+            <button class="btn-search" type="submit"><i class="fas fa-search icons"></i>Search</button>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="category-container">
+        <div class="wrapper wrapper-cards">
+            <h1>Categories on MyOLX</h1>
+            <div class="category-cards">
+                <a class="card-categ">
+                    <img src="{{ url_for('static', filename='photo-cards/elektronika_for_blackout-1x.png') }}" alt="" class="img-card" style="background-color: rgb(255,206,50);">
+                    <span class="card-title">Electronis</span>
+                </a>
+                <a class="card-categ">
+                    <img src="{{ url_for('static', filename='photo-cards/zhivotnye-35-1x.png') }}" alt="" class="img-card" style="background-color: rgb(200,248,246);">
+                    <span class="card-title">Pets</span>
+                </a>
+                <a class="card-categ">
+                    <img src="{{ url_for('static', filename='photo-cards/dom-i-sad-899-1x.png') }}" alt="" class="img-card" style="background-color: rgb(255,214,201);">
+                    <span class="card-title">Home Furniture</span>
+                </a>
+                <a class="card-categ">
+                    <img src="{{ url_for('static', filename='/photo-cards/moda-i-stil-891-1x.png') }}" alt="" class="img-card" style="background-color: rgb(255,86,54);">
+                    <span class="card-title">Clothing</span>
+                </a>
+                <a class="card-categ">
+                    <img src="{{ url_for('static', filename='/photo-cards/hobbi-otdyh-i-sport-903-1x.png') }}" alt="" class="img-card" style="background-color: rgb(255,246,217);">
+                    <span class="card-title">Hobbies</span>
+                </a>
+                <a class="card-categ">
+                    <img src="{{ url_for('static', filename='/photo-cards/transport-1532-1x.png') }}" alt="" class="img-card" style="background-color: rgb(35,229,219);">
+                    <span class="card-title">Vehicles</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
