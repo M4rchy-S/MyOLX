@@ -1,4 +1,11 @@
 {% extends "base1.html" %}
+
+{% block profile_name %}
+
+    {{ username }}
+
+{% endblock %}
+
 {% block searchbar %}
     <div class="search-bar-section search-bar-section-search-page">
         <form action="{{ url_for('search') }}" class="wrapper wrapper-search-bar">
@@ -62,6 +69,8 @@
 
 {% endblock %}
 
+
+
 {% block content %}
 
     <div class="posts-container">
@@ -69,7 +78,7 @@
 
             <h2>Found posts</h2>
             <!-- Posts cards -->
-            <a class="post-card" href="{{ url_for('postpage') }}">
+            <a class="post-card" href="#">
                 <img src="{{ url_for('static', filename='/images/pic1.jpg') }}" alt="" class="image-post">
                 <div class="post-card-desc">
                     <div class="post-card-desc-top">

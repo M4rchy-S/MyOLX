@@ -16,7 +16,7 @@
         <div class="wrapper">
             <span id="logo"><a href="{{ url_for('main') }}" class="logo-a">MyOLX</a></span>
             <div id="right_ui_buttons">
-                <a href="{{ url_for('ann_list') }}" class="profile-a"><i class="fa-regular fa-user"></i>Your profile</a>
+                <a href="{{ url_for('ann_list') }}" class="profile-a"><i class="fa-regular fa-user"></i>{% block profile_name %}Your profile {% endblock %}</a>
                 <button class="btn-nav" onclick="window.location.href='{{ url_for('create_ann') }}'" >Make announcement</button>
             </div>
         </div>

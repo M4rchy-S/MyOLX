@@ -1,20 +1,31 @@
-from flask import Flask, redirect, url_for, render_template, make_response, request, session
+from flask import Flask, redirect, url_for, render_template, make_response, request, session, jsonify
 from psycopg2 import pool
 import form_validation
+from hashlib import pbkdf2_hmac
 
 app = Flask(__name__)
 
-# app.config['SECRET_KEY'] = "MySuper_secret_Key"
 app.secret_key = "MySuper_secret_Key"
+main_salt = b'SuperSecretSalt'
 
-app.config['DB_POOL'] = pool.SimpleConnectionPool(
-    1, 
-    10, 
-    user='postgres', 
-    host='localhost', 
-    port='5432', 
-    database='webserver'
-)
+try:
+    app.config['DB_POOL'] = pool.SimpleConnectionPool(
+        1, 
+        10, 
+        user='postgres', 
+        host='localhost', 
+        port='5432', 
+        database='webserver'
+    )
+except Exception as e:
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def catch_all(path):
+        return "<h2>Server Database is offline. Restart Server manually</h2>"
+    
+    app.run()
+    
+
 
 def db_query(query: str) -> str:
     conn = None
@@ -31,24 +42,32 @@ def db_query(query: str) -> str:
         if conn:
             app.config['DB_POOL'].putconn(conn)
 
+def get_hash_password(input_password: str) -> str:
+    return pbkdf2_hmac('sha256', input_password.encode('utf-8'), main_salt, 500).hex()
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    return "<h3>Error 500 on server Side</h3>"
 
 @app.route("/")
 @app.route("/index")
 def main():
-    return render_template("index.html")
+    return render_template("index.html", username=session.get('name', "Your profile"))
 
 @app.route("/search")
 def search():
-    return render_template("search.html")
+    return render_template("search.html", username=session.get('name', "Your profile"))
 
 @app.route("/<int:post_id>")
 def postpage(post_id):
     results = db_query(f'SELECT posts.images, posts.description, posts.title, posts.price, posts."location", users."name", users.phone FROM posts INNER JOIN users ON posts.user_id = users.id WHERE posts.id = {post_id}')
     print(f"[DEBUG] {results=}")
-    if not results:
+    if results == '':
+        return redirect(url_for('handle_error'))    
+    elif not results:
         return redirect(url_for('error_page'))
 
-    return render_template("postpage.html", images=str(results[0][0]).split(" "), description=results[0][1], title=results[0][2], price=results[0][3],location=results[0][4], user=results[0][5], phone=results[0][6])
+    return render_template("postpage.html", username=session.get('name', "Your profile"),images=str(results[0][0]).split(" "), description=results[0][1], title=results[0][2], price=results[0][3],location=results[0][4], user=results[0][5], phone=results[0][6])
 
 @app.route("/error")
 def error_page():
@@ -102,12 +121,15 @@ def enter_account():
     if request.method == 'POST':
 
         email = request.form['email']
-        password = request.form['password']
+        # password = pbkdf2_hmac('sha256', request.form['password'].encode('utf-8'), b'SuperSecretSalt', 500).hex()
+        password = get_hash_password(request.form['password'])
         
-        res = db_query(f"SELECT users.id FROM users WHERE users.email = '{email}' AND users.\"password\" = '{password}'")
+        res = db_query(f"SELECT users.\"name\" FROM users WHERE users.email = '{email}' AND users.\"password\" = '{password}'")
         if res:
-            session['email'] = email
-            return redirect(url_for('ann_list'))        
+            session['name'] = res[0][0]
+            return redirect(url_for('ann_list'))  
+        elif res == '':
+            return redirect(url_for('handle_error'))      
         else:
             return redirect(url_for('sign_in', message="Incorrect data") )
     
