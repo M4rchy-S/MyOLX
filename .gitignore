@@ -1,1 +1,7 @@
 test_db.ipynb
+db_template.pgred
+db_tenplate.sql
+db_template.pgerd
+test_db.ipynb
+static/images/*
+__pycache__

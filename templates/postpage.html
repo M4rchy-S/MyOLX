@@ -1,10 +1,8 @@
 {% extends "base1.html" %}
     {% block additional_links %}
-    <link rel="preload" href="{{ url_for('static',filename='/images/pic1.jpg' ) }}" as="image" class="img-classes">
-    <link rel="preload" href="{{ url_for('static',filename='/images/pic2.jpg' ) }}" as="image" class="img-classes">
-    <link rel="preload" href="{{ url_for('static',filename='/images/pic3.jpg' ) }}" as="image" class="img-classes">
-    <link rel="preload" href="{{ url_for('static',filename='/images/pic4.jpg' ) }}" as="image" class="img-classes">
-    <link rel="preload" href="{{ url_for('static',filename='/images/pic5.jpg' ) }}" as="image" class="img-classes">
+        {% for image in images %}
+            <link rel="preload" href="{{ url_for('static',filename='/images/'+image ) }}" as="image" class="img-classes">
+        {% endfor %}
     {% endblock %}
 
 
@@ -40,7 +38,7 @@
 
                 <div class="desc-widget">
                     <h2>Description</h2>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Necessitatibus, dolor. Adipisci repellat totam reprehenderit. Consectetur vel qui ipsam nesciunt itaque nobis, aut commodi inventore earum aliquid iste, quaerat eaque doloremque a doloribus? Fugiat cupiditate soluta non, omnis reiciendis praesentium corporis quas provident vel exercitationem maxime corrupti! A praesentium dolores non, qui quisquam assumenda nisi expedita natus unde earum, alias ratione laborum impedit quis. Odit non laudantium nemo necessitatibus magni deleniti dolore sequi rem delectus aperiam repudiandae repellendus, a veritatis deserunt obcaecati sunt velit, ab sint dolorem illum iusto voluptates recusandae enim! Eligendi rerum ab similique ipsam soluta temporibus at expedita perferendis minus non reprehenderit, eum odit? Quos debitis molestias qui voluptatem soluta eaque recusandae, ex in inventore enim vitae molestiae nobis nihil accusantium hic eveniet libero velit minima maiores doloremque unde perferendis tenetur aut sit! Exercitationem laboriosam nemo quam voluptate, repudiandae nisi ad temporibus nulla libero dolores! Voluptatibus ipsam iusto in, facere quisquam a consectetur blanditiis doloribus inventore modi eius molestiae cum dolores nemo aspernatur repellat laborum vero! Qui tempore, quia doloremque quis ipsa repellendus aliquid consequatur tenetur iusto ipsum expedita voluptatum culpa illum nobis illo, dolor ea totam? Deserunt eum, neque ipsum vitae in, pariatur delectus enim beatae dolore labore libero culpa, perspiciatis ex ipsam? Deserunt inventore blanditiis atque sint deleniti! Ab quam error autem nihil ipsum maxime nam porro facilis perferendis, natus expedita, dicta explicabo corrupti. Ut excepturi minus, ex, autem voluptatibus doloribus ipsa doloremque, nesciunt laborum dolorum asperiores deserunt qui natus laboriosam veritatis dolorem tenetur assumenda sed.</p>
+                    <p>{{ description }}</p>
                         
                 </div>
 
@@ -48,16 +46,17 @@
 
             <div class="post-main-cont-right">
                 <div class="title-widget">
-                    <span class="title">Bengalian cat</span>
-                    <span class="price">31 333 UAH</span>
+                    <span class="title">{{ title }}</span>
+                    <span class="price">{{ price }} UAH</span>
+                    <span class="price">{{ location }}</span>
                     <!-- <button class="main-btn">Show phone</button> -->
                     
                 </div>
 
                 <div class="title-widget">
                     <span class="title">User</span>
-                    <span class="price">Erik Kendrick</span>
-                    <span class="price">+380962402589</span>
+                    <span class="price">{{ user }}</span>
+                    <span class="price">{{ phone }}</span>
                 </div>
 
                 <button class="main-btn" onclick="history.back()">Return</button>
