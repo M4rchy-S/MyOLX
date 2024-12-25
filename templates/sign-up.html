@@ -29,6 +29,11 @@
                 <p>Phone Number</p>
                 <input type="text" class="textline" maxlength="35" name="phone">
             </div>
+            {% if error_message is defined %}
+            <p style="color:#D63A3A;">
+                {{ error_message }}
+            </p>
+            {% endif %}
             <button class="main-btn" type="submit">Sign-up</button>
         </div>
 

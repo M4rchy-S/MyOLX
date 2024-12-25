@@ -5,3 +5,4 @@ db_template.pgerd
 test_db.ipynb
 static/images/*
 __pycache__
+test.ipynb

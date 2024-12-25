@@ -1,6 +1,6 @@
-from flask import Flask, redirect, url_for, render_template, make_response, request, session, jsonify
+from flask import Flask, redirect, url_for, render_template, request, session
 from psycopg2 import pool
-import form_validation
+from vaildation import InputValidation
 from hashlib import pbkdf2_hmac
 
 app = Flask(__name__)
@@ -33,7 +33,15 @@ def db_query(query: str) -> str:
         conn = app.config['DB_POOL'].getconn()
         cur = conn.cursor()
         cur.execute(query)
-        rows = cur.fetchall()
+        if query.split()[0] == 'SELECT':
+            rows = cur.fetchall()
+        else:
+            rows = "+"
+        # try:
+        #     rows = cur.fetchall()
+        # except Exception as e:
+        #     rows = " "
+        conn.commit()
         return rows
     except Exception as e:
         print("[ERROR] Query database error acquired")
@@ -85,7 +93,8 @@ def sign_in():
 @app.route("/sign-up")
 def sign_up():
     if not session:
-        return render_template("sign-up.html")
+        message = request.args.get('message', '')
+        return render_template("sign-up.html", error_message=message)
     else:
         return redirect(url_for('main'))
 
@@ -113,8 +122,24 @@ def ann_list():
 #       Main Utility URL Requests
 @app.route("/create_account", methods=['POST'])
 def create_account():
-    print(f'{request=}')
-    return "created"
+    if request.method == 'POST':
+        iv = InputValidation()
+        mail = iv.validate_mail( request.form['mail'] )
+        password = get_hash_password( iv.validate_password( request.form['password'] ) )
+        user_name = iv.validate_name( request.form['user_name'] )
+        phone = iv.validate_phone( request.form['phone'] )
+
+        if iv.count() > 0:
+            return redirect( url_for('sign_up', message=iv.getfirst()) )
+        
+        res = db_query(f"INSERT INTO users (name, phone, email, password) VALUES ('{user_name}', '+{phone}', '{mail}', '{password}')")
+        if res == '':
+            return redirect(url_for('handle_error'))
+        
+        session['name'] = user_name 
+        return redirect(url_for('ann_list')) 
+    else:
+        return redirect(url_for('main'))
 
 @app.route("/login", methods=['POST'])
 def enter_account():
@@ -144,4 +169,4 @@ def log_out():
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
