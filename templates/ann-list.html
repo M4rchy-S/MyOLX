@@ -19,25 +19,17 @@
     <div class="right-setting-widget announcement-list-widget"> 
         <h2>Your Announcement</h2>
         <div class="ann-list">
+            {% for title, price, id in lines_data %}
             <div class="ann-slot" href="">
-                <p>1.Bengalian cat</p>
-                <p>31 323 UAH</p>
-                <a class="ann-slot-dlt-btn">Delete</a>
+                <p>{{ title }}</p>
+                <p>{{ price }} UAH</p>
+                <a class="ann-slot-dlt-btn" href="#" name="{{id}}">Delete</a>
             </div>
-            <div class="ann-slot" href="">
-                <p>1.Bengalian cat</p>
-                <p>31 323 UAH</p>
-                <a class="ann-slot-dlt-btn">Delete</a>
-            </div>
-            <div class="ann-slot" href="">
-                <p>1.Bengalian cat</p>
-                <p>31 323 UAH</p>
-                <a class="ann-slot-dlt-btn">Delete</a>
-            </div>
-            
-
+           {% endfor %}
         </div>
+        {% if lines_data|length <= 10 %}
         <button class="main-btn" onclick="window.location.href='{{ url_for('create_ann') }}'">Add New</button>
+        {% endif %}
     </div>
 </div>
 

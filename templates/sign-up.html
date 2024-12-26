@@ -15,19 +15,19 @@
         <div class="form-content">
             <div class="input-object">
                 <p>Mail</p>
-                <input type="text" class="textline" maxlength="35" name="mail">
+                <input type="text" class="textline" maxlength="35" name="mail" required>
             </div>
             <div class="input-object">
                 <p>Create Password</p>
-                <input type="password" class="textline" name="password">
+                <input type="password" class="textline" name="password" required>
             </div>
             <div class="input-object">
                 <p>Name and Surname</p>
-                <input type="text" class="textline" maxlength="35" name="user_name">
+                <input type="text" class="textline" maxlength="35" name="user_name" required>
             </div>
             <div class="input-object">
                 <p>Phone Number</p>
-                <input type="text" class="textline" maxlength="35" name="phone">
+                <input type="text" class="textline" maxlength="35" name="phone" required>
             </div>
             {% if error_message is defined %}
             <p style="color:#D63A3A;">

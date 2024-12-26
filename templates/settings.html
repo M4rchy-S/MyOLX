@@ -17,30 +17,41 @@
     </div>
 
     <div class="right-setting-widget"> 
-        <div class="settings-widget-slot">
-            <h2>Change password</h2>
-            <div class="input-object">
-                <p>Old Password</p>
-                <input type="password" class="textline" maxlength="35">
+        <form action="{{ url_for('change_password') }}" method="post">
+            <div class="settings-widget-slot">
+                <h2>Change password</h2>
+                <div class="input-object">
+                    <p>Old Password</p>
+                    <input type="password" class="textline" maxlength="100" name="old_password" required> 
+                </div>
+                <div class="input-object">
+                    <p>New Password</p>
+                    <input type="password" class="textline" maxlength="100" name="new_password" required>
+                </div>
+                <button class="main-btn" type="submit">Change Password</button>
             </div>
-            <div class="input-object">
-                <p>New Password</p>
-                <input type="password" class="textline" maxlength="35">
+        </form>
+        <form action="{{ url_for('change_phone') }}" method="post">
+            <div class="settings-widget-slot">
+                <h2>Change Phone Number</h2>
+                <div class="input-object">
+                    <p>New Number</p>
+                    <input type="text" class="textline" maxlength="20" required name="new_phone">
+                </div>
+                <button class="main-btn" type="submit">Change Number</button>
             </div>
-            <button class="main-btn">Change Password</button>
-        </div>
-        <div class="settings-widget-slot">
-            <h2>Change Phone Number</h2>
-            <div class="input-object">
-                <p>New Number</p>
-                <input type="text" class="textline" maxlength="35">
+        </form>
+        <form action="{{ url_for('delete_account') }}" method="post">
+            <div class="settings-widget-slot">
+                <h2>Delete Account</h2>
+                <button class="main-btn cancel-button" type="submit">Delete Account</button>
             </div>
-            <button class="main-btn">Change Number</button>
-        </div>
-        <div class="settings-widget-slot">
-            <h2>Delete Account</h2>
-            <button class="main-btn cancel-button">Delete Account</button>
-        </div>
+        </form>
+        {% if error_message is defined %}
+        <p style="color:#D63A3A;">
+            {{ error_message }}
+        </p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
