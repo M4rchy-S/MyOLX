@@ -297,7 +297,13 @@ def create_new_ann():
         location = request.form.get('city-select', '')
         if location not in city_list:
             location = "All Country"
-        
+
+        #   Category
+        category_list =  ["None" ,"Electronics" ,"Pets" ,"Home_Furniture" ,"Clothing" ,"Hobbies" ,"Vehicles"]
+        category = request.form.get('category-select', '')
+        if category not in category_list:
+            category_list = "None"
+
         #   Desc
         description = request.form.get('description', "")
         if len( description ) <= 10 or len( description ) >= 50000:
@@ -329,7 +335,7 @@ def create_new_ann():
         user_id = res[0][0]
         file_lists = " ".join(file_lists)
 
-        res = db_query(f"INSERT INTO posts (user_id, title, price, images, description, location) VALUES ({user_id}, '{request.form.get('title', 'title_sample')}', {price}, '{file_lists}', '{description}', '{location}')")
+        res = db_query(f"INSERT INTO posts (user_id, title, price, images, description, location, category) VALUES ({user_id}, '{request.form.get('title', 'title_sample')}', {price}, '{file_lists}', '{description}', '{location}', '{category}')")
         if res == '':
             return redirect(url_for('handle_error')) 
         
@@ -365,4 +371,5 @@ def delete_ann():
 
 
 if __name__ == "__main__":
+    # session.clear()
     app.run(debug=True)

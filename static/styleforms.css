@@ -40,7 +40,7 @@
 
 .background-page{
     background-color:var(--main-shadow-color);
-    height:1000px;
+    height:1200px;
     width:100%;
 
     display:flex;
@@ -127,7 +127,7 @@ body{
 
 .form-create-ann{
     min-height:350px;
-    max-height:825px;
+    max-height:900px;
     width: 500px;
     background-color:var(--main-accent-color);
 
