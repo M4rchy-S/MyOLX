@@ -2,11 +2,18 @@ from flask import Flask, redirect, url_for, render_template, request, session
 from psycopg2 import pool
 from vaildation import InputValidation
 from hashlib import pbkdf2_hmac
+import os
 
 app = Flask(__name__)
 
-app.secret_key = "MySuper_secret_Key"
+# app.secret_key = "MySuper_secret_Key"
+app.config['SECRET_KEY'] = "MySuper_secret_Key"
 main_salt = b'SuperSecretSalt'
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+UPLOAD_FOLDER = '\\static\\images'
+app.config['UPLOAD_FOLDER'] = app.root_path + UPLOAD_FOLDER
+# app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
 
 try:
     app.config['DB_POOL'] = pool.SimpleConnectionPool(
@@ -54,6 +61,10 @@ def db_query(query: str) -> str:
 def get_hash_password(input_password: str) -> str:
     return pbkdf2_hmac('sha256', input_password.encode('utf-8'), main_salt, 500).hex()
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.errorhandler(Exception)
 def handle_error(e):
     return f"<h3>Error 500 on server Side</h3><\br>{e}"
@@ -70,7 +81,7 @@ def search():
 @app.route("/<int:post_id>")
 def postpage(post_id):
     results = db_query(f'SELECT posts.images, posts.description, posts.title, posts.price, posts."location", users."name", users.phone FROM posts INNER JOIN users ON posts.user_id = users.id WHERE posts.id = {post_id}')
-    print(f"[DEBUG] {results=}")
+    # print(f"[DEBUG] {results=}")
     if results == '':
         return redirect(url_for('handle_error'))    
     elif not results:
@@ -102,7 +113,8 @@ def sign_up():
 @app.route("/create-ann")
 def create_ann():
     if session:
-        return render_template("create-ann.html")
+        message =request.args.get('message', '')
+        return render_template("create-ann.html", error_message=message)
     else:
         return redirect(url_for('sign_in'))
 
@@ -120,11 +132,11 @@ def ann_list():
         res = db_query(f"SELECT posts.title, posts.price, posts.id FROM posts INNER JOIN users ON posts.user_id = users.id WHERE users.email = '{session['email']}'")
         if res == '':
             return redirect(url_for('handle_error'))
-        # titles = res[0]
-        # prices = res[1]
-        # ids = res[2]
-        # summary_data = zip(titles, prices, ids)
-        print(f"[DEBUG] {res=}")
+        # elif len(res) == 0:
+        #     return redirect(url_for('handle_error'))
+
+
+        # print(f"[DEBUG] {res=}")
         return render_template("ann-list.html", lines_data=res)
     else:
         return redirect(url_for('sign_in'))
@@ -251,7 +263,105 @@ def delete_account():
             return redirect(url_for('log_out'))
     else:
         return redirect(url_for('main'))
+
+@app.route("/create-new-ann", methods=['POST'])    
+def create_new_ann():
+    if request.method == 'POST' and session:
+        #   form data validation
+        res = db_query(f"SELECT COUNT(*) FROM posts INNER JOIN users ON posts.user_id = users.id WHERE users.email = '{session['email']}'")
+        if res == '':
+            return redirect(url_for('handle_error'))  
+        
+        if(res[0][0] >= 5):
+            return redirect(url_for('create_ann', message="Your already have 5 posts"))
+        
+        #   title
+        if len( request.form.get('title', '') ) <= 3:
+            return redirect(url_for('create_ann', message="Small title"))
+        
+        #   number
+        try:
+            price = float( request.form.get('price', '') )
+            if price <= 0:
+                raise Exception
+        except Exception as e:
+            return redirect(url_for('create_ann', message="Bad Price"))
+        
+        #   Location (city)
+        city_list = [
+            "All Country","Kyiv","Kharkiv","Odesa","Dnipro","Lviv","Zaporizhzhia","Kryvyi Rih",
+            "Mykolaiv","Mariupol","Vinnytsia","Kherson","Poltava","Chernihiv","Cherkasy",
+            "Sumy","Zhytomyr","Chernivtsi","Ivano-Frankivsk","Ternopil","Rivne","Lutsk",
+            "Uzhhorod","Kropyvnytskyi" ]
+        
+        location = request.form.get('city-select', '')
+        if location not in city_list:
+            location = "All Country"
+        
+        #   Desc
+        description = request.form.get('description', "")
+        if len( description ) <= 10 or len( description ) >= 50000:
+            return redirect(url_for('create_ann', message="Bad description"))
+
+        #   Files data validation
+        file_lists = []
+        if 'images[]' in request.files:
+            for file in request.files.getlist("images[]"):
+                if file.filename == '':
+                    continue
+                
+                file.seek(0, 2)
+                file_size = file.tell()
+                file.seek(0)
+
+                if file_size >= 56623104:
+                    return redirect(url_for('create_ann', message="File Size is too big (54 Mb is max)"))
+
+                if file and allowed_file(file.filename):
+                    file.filename = os.urandom(12).hex() + '.' + file.filename.rsplit('.', 1)[1].lower()
+                    file.save( os.path.join(app.config['UPLOAD_FOLDER'], file.filename) )
+                    file_lists.append( file.filename )
+        
+        res = db_query(f"SELECT id FROM users WHERE email = '{session['email']}'")
+        if res == '':
+            return redirect(url_for('handle_error')) 
+        
+        user_id = res[0][0]
+        file_lists = " ".join(file_lists)
+
+        res = db_query(f"INSERT INTO posts (user_id, title, price, images, description, location) VALUES ({user_id}, '{request.form.get('title', 'title_sample')}', {price}, '{file_lists}', '{description}', '{location}')")
+        if res == '':
+            return redirect(url_for('handle_error')) 
+        
+        return redirect(url_for('ann_list'))
+    else:
+        return redirect(url_for('main'))
     
+@app.route("/delete-ann", methods=['GET'])
+def delete_ann():
+    if request.method == 'GET' and session:
+        post_id = request.args.get('post_id', '')
+        if post_id == '':
+            return redirect(url_for('ann_list'))
+        
+        res = db_query(f"SELECT users.email FROM posts INNER JOIN users ON posts.user_id = users.id WHERE posts.id = {post_id};")
+        if res == '':
+            return redirect(url_for('handle_error'))
+        
+        user_email = res[0][0]
+
+        if user_email == session['email']:
+            res = db_query(f"DELETE FROM posts WHERE id = {post_id};")
+            if res == '':
+                return redirect(url_for('handle_error'))
+
+            return redirect(url_for('ann_list'))
+        else:
+            redirect(url_for('main'))
+
+
+    else:
+        redirect(url_for('main'))
 
 
 if __name__ == "__main__":

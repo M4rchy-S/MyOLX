@@ -127,6 +127,7 @@ body{
 
 .form-create-ann{
     min-height:350px;
+    max-height:825px;
     width: 500px;
     background-color:var(--main-accent-color);
 
@@ -143,10 +144,10 @@ body{
     padding-top:50px;
     padding-bottom:50px;
 
-    gap:20px;
+    gap:10px;
 
     font-family: var(--ff);
-    font-size: var(--ff-size-20);
+    font-size: var(--ff-size-18);
     font-weight: var(--ff-weight-bold);
 
     border-radius:15px;
@@ -338,4 +339,10 @@ input::-webkit-inner-spin-button {
     border-radius: 5px;
     color:var(--main-accent-color);
     cursor: pointer;
+}
+
+.form-ann-style{
+    display:flex;
+    flex-direction: column;
+    gap:25px;
 }

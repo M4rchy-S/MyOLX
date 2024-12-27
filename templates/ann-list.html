@@ -20,10 +20,10 @@
         <h2>Your Announcement</h2>
         <div class="ann-list">
             {% for title, price, id in lines_data %}
-            <div class="ann-slot" href="">
+            <div class="ann-slot" href="" onclick="window.location.href='{{ url_for('postpage', post_id=id) }}'">
                 <p>{{ title }}</p>
                 <p>{{ price }} UAH</p>
-                <a class="ann-slot-dlt-btn" href="#" name="{{id}}">Delete</a>
+                <a class="ann-slot-dlt-btn" href="{{ url_for('delete_ann', post_id=id) }}" name="{{id}}">Delete</a>
             </div>
            {% endfor %}
         </div>
