@@ -79,27 +79,29 @@
 
     <div class="posts-container">
         <div class="wrapper posts-wrapper">
+            {% if data_cards|length == 0 %}
+                <h2 style="height:500px;text-align: center;">Not found anything. Try something else.</h2>
+            {% else %}
+                <h2>Found posts</h2>
+                {% for id, title, price, location, image in data_cards %}
+                    <!-- Posts cards -->
+                    <a class="post-card" href="{{ url_for('postpage', post_id=id) }}">
+                        <img src="{{ url_for('static', filename='/images/'+image ) }}" alt="" class="image-post">
+                        <div class="post-card-desc">
+                            <div class="post-card-desc-top">
+                                <p class="title-p">{{ title }}</p>
+                                <p class="price-p">{{ price }} UAH</p>
+                            </div>
+                            <div class="post-card-desc-bottom">
+                                <p class="locat-p">
+                                    {{ location }}
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
 
-            <h2>Found posts</h2>
-            {% for id, title, price, location, image in data_cards %}
-            <!-- Posts cards -->
-            <a class="post-card" href="{{ url_for('postpage', post_id=id) }}">
-                <img src="{{ url_for('static', filename='/images/'+image ) }}" alt="" class="image-post">
-                <div class="post-card-desc">
-                    <div class="post-card-desc-top">
-                        <p class="title-p">{{ title }}</p>
-                        <p class="price-p">{{ price }} UAH</p>
-                    </div>
-                    <div class="post-card-desc-bottom">
-                        <p class="locat-p">
-                            {{ location }}
-                        </p>
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
-            
-            
+            {% endif %}
             
             <div class="bottom-ui">
                 <a href="{{ url_for('search', page=page-1, search_text=search_text, category_select=category_select, city_select=city_select ) }}">

@@ -173,7 +173,7 @@ i{
     padding:10px;
     min-width: 150px;
 
-    font-family:var(--ff);
+font-family:var(--ff);
     font-size: var(--ff-size-22);
     font-weight: var(--ff-weight-medium);
     color: var(--main-accent-color);
@@ -279,6 +279,7 @@ input{
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    text-decoration: none;
 
     color: var(--accent-second-color);
     gap:25px;

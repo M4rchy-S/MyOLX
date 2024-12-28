@@ -130,7 +130,7 @@ def search():
     if res == '':
         return redirect(url_for('handle_error'))
     
-    max_pages = ceil(res[0][0] / MAX_PAGES_PER_SEARCH)
+    max_pages = max(ceil(res[0][0] / MAX_PAGES_PER_SEARCH), 1)
     print(f"[DEBUG] max_pages for query = {max_pages}")
 
     if cur_page > max_pages:
