@@ -7,15 +7,18 @@
 {% endblock %}
 
 {% block searchbar %}
+<form action="{{ url_for('search') }}">
     <div class="search-bar-section search-bar-section-search-page">
-        <form action="{{ url_for('search') }}" class="wrapper wrapper-search-bar">
+        <div class="wrapper wrapper-search-bar">
             <div class="search-div search-bar">
                 <i class="fas fa-search icons icons-inputs"></i>
-                <input type="text" class="nav-input" maxlength="250" placeholder="What are you looking for?">
+                <input type="text" class="nav-input" maxlength="250" placeholder="What are you looking for?" name="search_text">
+                <input type="hidden" name="page" value="{{ page }}">
             </div>
             <button class="btn-search" type="submit"><i class="fas fa-search icons"></i>Search</button>
-        </form>
+        </div>
     </div>
+   
 
     <div class="filters-container">
         <div class="wrapper filters-div">
@@ -23,7 +26,7 @@
                 <div class = filter-block>
                     <div class="filter-settings">
                         <p>Category</p>
-                        <select name="category-select" class="container-box">
+                        <select name="category_select" class="container-box">
                             <option value="None">None</option>
                             <option value="Electronics">Electronics</option>
                             <option value="Pets">Pets</option>
@@ -35,7 +38,7 @@
                     </div>
                     <div class="filter-settings">
                         <p>City</p>
-                        <select name="city-select" class="container-box">
+                        <select name="city_select" class="container-box">
                             <option value="all">All Country</option>
                             <option value="Kyiv">Kyiv</option>
                             <option value="Kharkiv">Kharkiv</option>
@@ -67,6 +70,7 @@
         </div>
     </div>
 
+</form>
 {% endblock %}
 
 
@@ -77,73 +81,34 @@
         <div class="wrapper posts-wrapper">
 
             <h2>Found posts</h2>
+            {% for id, title, price, location, image in data_cards %}
             <!-- Posts cards -->
-            <a class="post-card" href="#">
-                <img src="{{ url_for('static', filename='/images/pic1.jpg') }}" alt="" class="image-post">
+            <a class="post-card" href="{{ url_for('postpage', post_id=id) }}">
+                <img src="{{ url_for('static', filename='/images/'+image ) }}" alt="" class="image-post">
                 <div class="post-card-desc">
                     <div class="post-card-desc-top">
-                        <p class="title-p">Typical title card text</p>
-                        <p class="price-p">31 311 UAH</p>
+                        <p class="title-p">{{ title }}</p>
+                        <p class="price-p">{{ price }} UAH</p>
                     </div>
                     <div class="post-card-desc-bottom">
                         <p class="locat-p">
-                            Kyiv
+                            {{ location }}
                         </p>
                     </div>
                 </div>
             </a>
-            <a class="post-card" href="#">
-                <img src="{{ url_for('static', filename='/images/pic2.jpg') }}" alt="" class="image-post">
-                <div class="post-card-desc">
-                    <div class="post-card-desc-top">
-                        <p class="title-p">Typical title card text</p>
-                        <p class="price-p">31 311 UAH</p>
-                    </div>
-                    <div class="post-card-desc-bottom">
-                        <p class="locat-p">
-                            Kyiv
-                        </p>
-                    </div>
-                </div>
-            </a>
-            <a class="post-card" href="#">
-                <img src="{{ url_for('static', filename='/images/pic2.jpg') }}" alt="" class="image-post">
-                <div class="post-card-desc">
-                    <div class="post-card-desc-top">
-                        <p class="title-p">Typical title card text</p>
-                        <p class="price-p">31 311 UAH</p>
-                    </div>
-                    <div class="post-card-desc-bottom">
-                        <p class="locat-p">
-                            Kyiv
-                        </p>
-                    </div>
-                </div>
-            </a>
-            <a class="post-card" href="#">
-                <img src="{{ url_for('static', filename='/images/pic2.jpg') }}" alt="" class="image-post">
-                <div class="post-card-desc">
-                    <div class="post-card-desc-top">
-                        <p class="title-p">Typical title card text</p>
-                        <p class="price-p">31 311 UAH</p>
-                    </div>
-                    <div class="post-card-desc-bottom">
-                        <p class="locat-p">
-                            Kyiv
-                        </p>
-                    </div>
-                </div>
-            </a>
+            {% endfor %}
+            
             
             
             <div class="bottom-ui">
-                <a href="#">
+                <a href="{{ url_for('search', page=page-1, search_text=search_text, category_select=category_select, city_select=city_select ) }}">
                     <i class="fa-solid fa-angle-left switch-arrows"></i>
                 </a>
                 
-                <h2 class="switch-title">1 of 62</h2>
+                <h2 class="switch-title">{{ page }} of {{ all_pages }}</h2>
                
-                <a href="#">
+                <a href="{{ url_for('search', page=page+1, search_text=search_text, category_select=category_select, city_select=city_select) }}">
                     <i class="fa-solid fa-angle-right switch-arrows"></i>
                 </a>
             </div>

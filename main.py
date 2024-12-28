@@ -3,6 +3,7 @@ from psycopg2 import pool
 from vaildation import InputValidation
 from hashlib import pbkdf2_hmac
 import os
+from math import ceil
 
 app = Flask(__name__)
 
@@ -14,6 +15,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 UPLOAD_FOLDER = '\\static\\images'
 app.config['UPLOAD_FOLDER'] = app.root_path + UPLOAD_FOLDER
 # app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
+
+MAX_PAGES_PER_SEARCH = 5
 
 try:
     app.config['DB_POOL'] = pool.SimpleConnectionPool(
@@ -76,7 +79,79 @@ def main():
 
 @app.route("/search")
 def search():
-    return render_template("search.html", username=session.get('name', "Your profile"))
+    #   Page
+    cur_page = request.args.get('page', '1')
+    try:
+        cur_page = int(cur_page)
+        if cur_page <= 0:
+            cur_page = 1
+    except Exception as e:
+        redirect(url_for('main'))
+    
+    #   Category
+    category = request.args.get('category_select', 'None')
+    category_list =  ["None" ,"Electronics" ,"Pets" ,"Home_Furniture" ,"Clothing" ,"Hobbies" ,"Vehicles"]
+    if category not in category_list:
+        category_list = "None"
+
+    # Location
+    location = request.args.get('city_select', '') 
+    city_list = [
+        "All Country","Kyiv","Kharkiv","Odesa","Dnipro","Lviv","Zaporizhzhia","Kryvyi Rih",
+        "Mykolaiv","Mariupol","Vinnytsia","Kherson","Poltava","Chernihiv","Cherkasy",
+        "Sumy","Zhytomyr","Chernivtsi","Ivano-Frankivsk","Ternopil","Rivne","Lutsk",
+        "Uzhhorod","Kropyvnytskyi" ]
+        
+    if location not in city_list:
+        location = "All Country"
+    
+
+    #   Search text
+    search_text = request.args.get('search_text', '') 
+
+    #   Sql text
+
+    #   Get total size
+    sq_list = ["SELECT COUNT(*) FROM posts"]
+    parameters = []
+    if len(search_text) > 0:
+        parameters.append(f"document @@ to_tsquery('{search_text}')")
+    if category != "None":
+        parameters.append( f"category = '{category}' " )
+    if location != "All Country":
+        parameters.append( f"location = '{location}' " )
+
+    if len(parameters) > 0:
+        sq_list.append( " WHERE " + " AND ".join(parameters) )
+
+    sql_query_search = " ".join(sq_list)
+
+    res = db_query(sql_query_search)
+    if res == '':
+        return redirect(url_for('handle_error'))
+    
+    max_pages = ceil(res[0][0] / MAX_PAGES_PER_SEARCH)
+    print(f"[DEBUG] max_pages for query = {max_pages}")
+
+    if cur_page > max_pages:
+        cur_page = 1
+
+    #   Get data
+    sq_list = ["SELECT id,title,price,location,images  FROM posts"]
+    if len(parameters) > 0:
+        sq_list.append( " WHERE " + " AND ".join(parameters) )
+    sq_list.append(f"ORDER BY time DESC LIMIT {MAX_PAGES_PER_SEARCH} OFFSET {(cur_page-1) * MAX_PAGES_PER_SEARCH};")
+    sql_query_search = " ".join(sq_list)
+
+    post_cards_data = db_query(sql_query_search)
+    if post_cards_data == '':
+        return redirect(url_for('handle_error'))
+    
+    post_cards_data = [list(data_line) for data_line in post_cards_data]
+    for i in range(len(post_cards_data)):
+        post_cards_data[i][4] = post_cards_data[i][4].split()[0]
+    
+    return render_template("search.html", username=session.get('name', "Your profile"), page=cur_page, all_pages=max_pages, search_text=search_text, category_select=category, city_select=location, data_cards=post_cards_data)
 
 @app.route("/<int:post_id>")
 def postpage(post_id):
@@ -333,7 +408,10 @@ def create_new_ann():
         user_id = res[0][0]
         file_lists = " ".join(file_lists)
 
-        res = db_query(f"INSERT INTO posts (user_id, title, price, images, description, location, category) VALUES ({user_id}, '{request.form.get('title', 'title_sample')}', {price}, '{file_lists}', '{description}', '{location}', '{category}')")
+
+        #   INSERT INTO posts (user_id, title, price, images, description, location, category, document) VALUES (4, 'Test title', 777, 'cat1.jpg', 'Description about houses', 'All Country', 'None', to_tsvector('Test title' || ' ' || 'Description about houses'));
+
+        res = db_query(f"INSERT INTO posts (user_id, title, price, images, description, location, category, document) VALUES ({user_id}, '{request.form.get('title', 'title_sample')}', {price}, '{file_lists}', '{description}', '{location}', '{category}', to_tsvector('{request.form.get('title', 'title_sample')}' || ' ' || '{description}'))")
         if res == '':
             return redirect(url_for('handle_error')) 
         
