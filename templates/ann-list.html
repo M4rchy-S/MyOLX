@@ -23,7 +23,7 @@
             <div class="ann-slot" href="" onclick="window.location.href='{{ url_for('postpage', post_id=id) }}'">
                 <p>{{ title }}</p>
                 <p>{{ price }} UAH</p>
-                <a class="ann-slot-dlt-btn" href="{{ url_for('delete_ann', post_id=id) }}" name="{{id}}">Delete</a>
+                <a class="ann-slot-dlt-btn" href="{{ url_for('delete_ann', post_id=id, csrf_token=token ) }}" name="{{id}}">Delete</a>
             </div>
            {% endfor %}
         </div>

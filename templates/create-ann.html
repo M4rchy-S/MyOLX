@@ -76,6 +76,7 @@
         </div>
         
         <div class="form-control-buttons">
+            <input type='hidden' name="csrf_token" value="{{ token }}"></input>
             <button class="main-btn cancel-button" onclick="window.location.href='{{ url_for('ann_list') }}'">Cancel</button>
             <button class="main-btn" type="submit">Create</button>
         </div>

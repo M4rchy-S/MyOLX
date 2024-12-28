@@ -114,7 +114,7 @@ def sign_up():
 def create_ann():
     if session:
         message =request.args.get('message', '')
-        return render_template("create-ann.html", error_message=message)
+        return render_template("create-ann.html", error_message=message,  token=session.get('csrf_token', ''))
     else:
         return redirect(url_for('sign_in'))
 
@@ -122,7 +122,7 @@ def create_ann():
 def settings():
     if session:
         message = request.args.get('message', '')
-        return render_template("settings.html", error_message=message)
+        return render_template("settings.html", error_message=message, token=session.get('csrf_token', ''))
     else:
         return redirect(url_for('sign_in'))
 
@@ -132,12 +132,8 @@ def ann_list():
         res = db_query(f"SELECT posts.title, posts.price, posts.id FROM posts INNER JOIN users ON posts.user_id = users.id WHERE users.email = '{session['email']}'")
         if res == '':
             return redirect(url_for('handle_error'))
-        # elif len(res) == 0:
-        #     return redirect(url_for('handle_error'))
 
-
-        # print(f"[DEBUG] {res=}")
-        return render_template("ann-list.html", lines_data=res)
+        return render_template("ann-list.html", lines_data=res, token=session.get('csrf_token', ''))
     else:
         return redirect(url_for('sign_in'))
 
@@ -162,6 +158,7 @@ def create_account():
         session['email'] = mail
         session['password'] = password
         session['phone'] = phone
+        session['csrf_token'] = os.urandom(16).hex()
         return redirect(url_for('ann_list')) 
     else:
         return redirect(url_for('main'))
@@ -179,6 +176,7 @@ def enter_account():
             session['email'] = res[0][1]
             session['password'] = res[0][2]
             session['phone'] = res[0][3]
+            session['csrf_token'] = os.urandom(16).hex()
             return redirect(url_for('ann_list'))  
         elif res == '':
             return redirect(url_for('handle_error'))      
@@ -195,7 +193,7 @@ def log_out():
 
 @app.route("/change-password", methods=['POST'])
 def change_password():
-    if session and request.method == 'POST':
+    if session and request.method == 'POST' and request.form.get('csrf_token', '') == session['csrf_token']:
         if get_hash_password(request.form['old_password']) == session['password']:
             iv = InputValidation()
             iv.validate_password(request.form['new_password'])
@@ -219,7 +217,7 @@ def change_password():
 
 @app.route("/change-phone", methods=['POST'])
 def change_phone():
-    if session and request.method == 'POST':
+    if session and request.method == 'POST' and request.form.get('csrf_token', '') == session['csrf_token']:
         new_phone_number = request.form['new_phone']
         iv = InputValidation()
         phone_number = iv.validate_phone(new_phone_number)
@@ -245,7 +243,7 @@ def change_phone():
 
 @app.route("/delete-account", methods=['POST'])
 def delete_account():
-    if session and request.method == 'POST':
+    if session and request.method == 'POST' and request.form.get('csrf_token', '') == session['csrf_token']:
         res = db_query(f"SELECT id FROM users WHERE email = '{session['email']}'")
         if res == '':
             return redirect(url_for('handle_error')) 
@@ -266,7 +264,7 @@ def delete_account():
 
 @app.route("/create-new-ann", methods=['POST'])    
 def create_new_ann():
-    if request.method == 'POST' and session:
+    if request.method == 'POST' and session and request.form.get('csrf_token', '') == session['csrf_token']:
         #   form data validation
         res = db_query(f"SELECT COUNT(*) FROM posts INNER JOIN users ON posts.user_id = users.id WHERE users.email = '{session['email']}'")
         if res == '':
@@ -345,7 +343,7 @@ def create_new_ann():
     
 @app.route("/delete-ann", methods=['GET'])
 def delete_ann():
-    if request.method == 'GET' and session:
+    if request.method == 'GET' and session and request.args.get('csrf_token', '') == session['csrf_token']:
         post_id = request.args.get('post_id', '')
         if post_id == '':
             return redirect(url_for('ann_list'))
