@@ -131,7 +131,6 @@ def search():
         return redirect(url_for('handle_error'))
     
     max_pages = max(ceil(res[0][0] / MAX_PAGES_PER_SEARCH), 1)
-    print(f"[DEBUG] max_pages for query = {max_pages}")
 
     if cur_page > max_pages:
         cur_page = 1
@@ -149,20 +148,24 @@ def search():
     
     post_cards_data = [list(data_line) for data_line in post_cards_data]
     for i in range(len(post_cards_data)):
-        post_cards_data[i][4] = post_cards_data[i][4].split()[0]
+        if post_cards_data[i][4] != '':
+            post_cards_data[i][4] = post_cards_data[i][4].split()[0]
     
     return render_template("search.html", username=session.get('name', "Your profile"), page=cur_page, all_pages=max_pages, search_text=search_text, category_select=category, city_select=location, data_cards=post_cards_data)
 
-@app.route("/<int:post_id>")
+@app.route("/post/<int:post_id>")
 def postpage(post_id):
     results = db_query(f'SELECT posts.images, posts.description, posts.title, posts.price, posts."location", users."name", users.phone FROM posts INNER JOIN users ON posts.user_id = users.id WHERE posts.id = {post_id}')
-    # print(f"[DEBUG] {results=}")
     if results == '':
         return redirect(url_for('handle_error'))    
     elif not results:
         return redirect(url_for('error_page'))
+    
+    images_str = str(results[0][0]).split(" ")
+    if images_str[0] == '':
+        images_str.clear()
 
-    return render_template("postpage.html", username=session.get('name', "Your profile"),images=str(results[0][0]).split(" "), description=results[0][1], title=results[0][2], price=results[0][3],location=results[0][4], user=results[0][5], phone=results[0][6])
+    return render_template("postpage.html", username=session.get('name', "Your profile"),images=images_str, description=results[0][1], title=results[0][2], price=results[0][3],location=results[0][4], user=results[0][5], phone=results[0][6])
 
 @app.route("/error")
 def error_page():

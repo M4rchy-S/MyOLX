@@ -1,8 +1,10 @@
 {% extends "base1.html" %}
     {% block additional_links %}
-        {% for image in images %}
-            <link rel="preload" href="{{ url_for('static',filename='/images/'+image ) }}" as="image" class="img-classes">
-        {% endfor %}
+        {% if images|length >= 1 %}
+            {% for image in images %}
+                <link rel="preload" href="{{ url_for('static',filename='/images/'+image ) }}" as="image" class="img-classes">
+            {% endfor %}
+        {% endif %}
     {% endblock %}
 
 
@@ -36,7 +38,7 @@
                         <i class="fa-solid fa-angle-left switch-arrows"></i>
                     </a>
 
-                    <img src="" alt="" class="file-gallery" name="photo-gallery" id="photo-show-img">
+                    <img src="/static/no_image.jpg" alt="" class="file-gallery" name="photo-gallery" id="photo-show-img">
 
                     <a class="btn-switch-images" onclick="switchImage(1)">
                         <i class="fa-solid fa-angle-right switch-arrows"></i>
@@ -98,6 +100,15 @@
             index = 0;
 
         photo_element.src = images[index % img_count];
+    }
+</script>
+
+<script>
+    if (document.getElementsByClassName('img-classes').length <= 1)
+    {
+        let btns = document.getElementsByClassName('btn-switch-images');
+        btns[0].style['opacity'] = 0.3;
+        btns[1].style['opacity'] = 0.3;
     }
 </script>
 
