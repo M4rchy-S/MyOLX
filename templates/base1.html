@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='media.css') }}">
     <script src="https://kit.fontawesome.com/e7b3c4b0d9.js" crossorigin="anonymous"></script>
+    <script
+    src="https://code.jquery.com/jquery-3.7.1.js"
+    integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous">
+    </script>
     {% block additional_links %}
     {% endblock %}
 </head>
@@ -33,7 +38,7 @@
 
     <footer>
         <div class="wrapper">
-            <span id="logo"><a href="#" class="logo-a">MyOLX</a></span>
+            <span id="logo"><a href="{{ url_for('main') }}" class="logo-a">MyOLX</a></span>
         </div>
     </footer>
 

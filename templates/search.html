@@ -15,7 +15,8 @@
                 <input type="text" class="nav-input" maxlength="250" placeholder="What are you looking for?" name="search_text">
                 <input type="hidden" name="page" value="{{ page }}">
             </div>
-            <button class="btn-search" type="submit"><i class="fas fa-search icons"></i>Search</button>
+            <!-- <button class="btn-search" type="submit"><i class="fas fa-search icons"></i>Search</button> -->
+            <button class="btn-search" type=""><i class="fas fa-search icons"></i>Search</button>
         </div>
     </div>
    
@@ -116,4 +117,59 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block js_scripts %}
+<script>
+
+    function getData(event)
+    {
+        event.preventDefault();
+        const params = {
+            page: Number( document.getElementsByName('page')[0].value ),
+            search_text: document.getElementsByName('search_text')[0].value ,
+            category_select: $('[name="category_select"]').val(),
+            city_select:  $('[name="city_select"]').val()
+        }
+        $.get("/api/search", params, function(data){
+            console.log("Response: ", data);
+            const posts = $(".posts-wrapper")[0];
+
+            if (data['data_cards'].length == 0)
+            {
+                posts.innerHTML = `<h2 style="height:500px;text-align: center;">Not found anything. Try something else.</h2>`;
+                return;
+            }
+
+            posts.innerHTML = "<h2>Found posts</h2>";
+
+            for(let i = 0; i < data['data_cards'].length; i++)
+            {
+                posts.innerHTML += ` 
+                <a class="post-card" href="/post/${data['data_cards'][i][0]}">
+                        <img src="/static/images/${data['data_cards'][i][4]}" alt="" class="image-post">
+                        <div class="post-card-desc">
+                            <div class="post-card-desc-top">
+                                <p class="title-p">${data['data_cards'][i][1]}</p>
+                                <p class="price-p">${data['data_cards'][i][2]} UAH</p>
+                            </div>
+                            <div class="post-card-desc-bottom">
+                                <p class="locat-p">
+                                    ${data['data_cards'][i][3]}
+                                </p>
+                            </div>
+                        </div>
+                    </a>`
+                ;
+            }
+
+        }).fail(function(xhr, status, error){
+            console.log("Error");
+        });
+    }
+
+    $(".btn-search").on("click", getData);
+
+</script>
+
 {% endblock %}
