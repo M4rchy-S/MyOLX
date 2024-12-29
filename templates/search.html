@@ -163,6 +163,35 @@
                 ;
             }
 
+            
+                
+
+            let urlObj1 = new URL(window.location.href);
+            urlObj1.searchParams.delete("page");
+            urlObj1.searchParams.append("page", data['page'] - 1);
+            let var1 = urlObj1.toString();
+
+            var shift = 1;
+            if(data['page'] == data['all_pages'])
+                shift = 0;
+            let urlObj2 = new URL(window.location.href);
+            urlObj2.searchParams.delete("page");
+            urlObj2.searchParams.append("page", data['page'] + shift);
+            let var2 = urlObj2.toString();
+            
+            posts.innerHTML += 
+            `<div class="bottom-ui">
+                <a href="${var1}">
+                    <i class="fa-solid fa-angle-left switch-arrows"></i>
+                </a>
+                
+                <h2 class="switch-title">${data['page']} of ${data['all_pages']}</h2>
+               
+                <a href="${var2}">
+                    <i class="fa-solid fa-angle-right switch-arrows"></i>
+                </a>
+            </div>`
+
         }).fail(function(xhr, status, error){
             console.log("Error");
         });
