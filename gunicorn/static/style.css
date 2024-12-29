@@ -114,7 +114,9 @@ header{
 .profile-a{
     text-decoration: none;
     height: 21px;
-    width:250px;
+    min-width:125px;
+
+    width: 250px;
 
     font-family:var(--ff);
     font-size: var(--ff-size-18);
@@ -559,8 +561,8 @@ footer{
     background-color:#7F9799;
 
     background: url('/static/no_image.jpg') no-repeat center center;
-    min-width: 250px;
-    min-height:250px;
+    min-width: 175px;
+    min-height:175px;
     background-size: cover;
 }
 
