@@ -1,9 +1,9 @@
 test_db.ipynb
-db_template.pgred
-db_tenplate.sql
-db_template.pgerd
-test_db.ipynb
-static/images/*
-__pycache__
-test.ipynb
+/gunicorn/db_template.pgred
+/gunicorn/db_tenplate.sql
+/gunicorn/db_template.pgerd
+/gunicorn/test_db.ipynb
+/gunicorn/__pycache__
+/gunicorn/test.ipynb
 myolx.session.sql
+.vscode/

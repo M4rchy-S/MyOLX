@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: "webserver"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "testpassword"
+    volumes:
+      -  ./postgres:/docker-entrypoint-initdb.d
+      -  pgdata:/var/lib/postgres/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+  
+  gunicorn:
+    build: gunicorn/.
+    container_name: flask-app
+    environment:
+      FLASK_APP: app
+      FLASK_ENV: production
+    volumes:
+      - imagesdata:/static/images
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+volumes:
+  pgdata:
+  imagesdata:
+
+networks:
+  app-network:
+    driver: bridge
+

@@ -1,0 +1,115 @@
+{% extends "base1.html" %}
+    {% block additional_links %}
+        {% if images|length >= 1 %}
+            {% for image in images %}
+                <link rel="preload" href="{{ url_for('static',filename='/images/'+image ) }}" as="image" class="img-classes">
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
+
+
+    {% block searchbar %}
+    <div class="search-bar-section search-bar-section-search-page">
+        <form action="{{ url_for('search') }}" class="wrapper wrapper-search-bar">
+            <div class="search-div search-bar">
+                <i class="fas fa-search icons icons-inputs"></i>
+                <input type="text" class="nav-input" maxlength="250" placeholder="What are you looking for?" name="search_text">
+            </div>
+            <button class="btn-search" type="submit"><i class="fas fa-search icons"></i>Search</button>
+        </form>
+    </div>
+    {% endblock %}
+
+    
+{% block profile_name %}
+
+{{ username }}
+
+{% endblock %}
+
+    {% block content%}
+    <div class="post-main-container">
+
+        <div class="wrapper wrapper-widgets">
+            <div class="post-main-cont-left">
+
+                <div class="image-widget">
+                    <a class="btn-switch-images" onclick="switchImage(-1)">
+                        <i class="fa-solid fa-angle-left switch-arrows"></i>
+                    </a>
+
+                    <img src="/static/no_image.jpg" alt="" class="file-gallery" name="photo-gallery" id="photo-show-img">
+
+                    <a class="btn-switch-images" onclick="switchImage(1)">
+                        <i class="fa-solid fa-angle-right switch-arrows"></i>
+                    </a>
+                </div>
+
+                <div class="desc-widget">
+                    <h2>Description</h2>
+                    <p>{{ description }}</p>
+                        
+                </div>
+
+            </div>
+
+            <div class="post-main-cont-right">
+                <div class="title-widget">
+                    <span class="title">{{ title }}</span>
+                    <span class="price">{{ price }} UAH</span>
+                    <span class="price">{{ location }}</span>
+                    <!-- <button class="main-btn">Show phone</button> -->
+                    
+                </div>
+
+                <div class="title-widget">
+                    <span class="title">User</span>
+                    <span class="price">{{ user }}</span>
+                    <span class="price">{{ phone }}</span>
+                </div>
+
+                <button class="main-btn" onclick="history.back()">Return</button>
+
+            </div>
+        </div>
+
+    </div>
+
+    {% endblock %}
+
+
+{% block js_scripts %}
+<script>
+    let elements = document.getElementsByClassName("img-classes");
+    let images = [];
+    for(i = 0; i < elements.length; i++)
+        images.push(elements[i].href);   
+
+    let img_count = images.length;
+    let index = 0;
+
+    let photo_element = document.getElementsByName("photo-gallery")[0];
+    photo_element.src = images[0];
+
+    function switchImage(shift_step)
+    {
+        index += shift_step;
+        if(index < 0)
+            index = img_count - 1;
+        else if(index > img_count - 1)
+            index = 0;
+
+        photo_element.src = images[index % img_count];
+    }
+</script>
+
+<script>
+    if (document.getElementsByClassName('img-classes').length <= 1)
+    {
+        let btns = document.getElementsByClassName('btn-switch-images');
+        btns[0].style['opacity'] = 0.3;
+        btns[1].style['opacity'] = 0.3;
+    }
+</script>
+
+{% endblock %}
