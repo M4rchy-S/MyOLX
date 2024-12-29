@@ -12,5 +12,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 80
 
-CMD ["gunicorn", "-b", "0.0.0.0:80", "app:app"]
+CMD ["gunicorn", "-w 10","-b", "0.0.0.0:80", "app:app"]
 # CMD ["flask", "run", "--host=0.0.0.0", "--port=80"]

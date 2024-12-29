@@ -16,7 +16,7 @@ app.config['SECRET_KEY'] = "MySuper_secret_Key"
 main_salt = b'SuperSecretSalt'
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-UPLOAD_FOLDER = '\\static\\images'
+UPLOAD_FOLDER = '/static/images'
 app.config['UPLOAD_FOLDER'] = app.root_path + UPLOAD_FOLDER
 # app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
 
