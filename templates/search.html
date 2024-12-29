@@ -164,11 +164,18 @@
             }
 
             
-                
-
+            var shift = 1;
+            if(data['page'] == 1)
+                shift = 0;   
             let urlObj1 = new URL(window.location.href);
             urlObj1.searchParams.delete("page");
-            urlObj1.searchParams.append("page", data['page'] - 1);
+            urlObj1.searchParams.append("page", data['page'] - shift);
+            urlObj1.searchParams.delete("search_text");
+            urlObj1.searchParams.append("search_text", params['search_text']);
+            urlObj1.searchParams.delete("category_select");
+            urlObj1.searchParams.append("category_select", params['category_select']);
+            urlObj1.searchParams.delete("city_select");
+            urlObj1.searchParams.append("city_select", params['city_select']);
             let var1 = urlObj1.toString();
 
             var shift = 1;
@@ -177,6 +184,12 @@
             let urlObj2 = new URL(window.location.href);
             urlObj2.searchParams.delete("page");
             urlObj2.searchParams.append("page", data['page'] + shift);
+            urlObj2.searchParams.delete("search_text");
+            urlObj2.searchParams.append("search_text", params['search_text']);
+            urlObj2.searchParams.delete("category_select");
+            urlObj2.searchParams.append("category_select", params['category_select']);
+            urlObj2.searchParams.delete("city_select");
+            urlObj2.searchParams.append("city_select", params['city_select']);
             let var2 = urlObj2.toString();
             
             posts.innerHTML += 
