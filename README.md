@@ -1,6 +1,6 @@
-# MyOLX WebClone
+# MyOLX Web Clone
 This project was created to introduce myself with web-development
-To implement this such technologies was used:
+To implement this, such technologies were used:
 1. Docker
 2. Git
 3. Postgres
@@ -21,7 +21,6 @@ To implement this such technologies was used:
 ![8](https://github.com/user-attachments/assets/34e9fbd9-95b0-41ea-b940-f1e0a8b41088)
 
 ![9](https://github.com/user-attachments/assets/dc2030a1-2f16-4ed7-bde1-68f8118edbe7)
-
 
 
 
